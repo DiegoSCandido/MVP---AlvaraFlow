@@ -1,0 +1,22 @@
+{
+  "name": "alvaraflow",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Gestao de alvaras e licencas empresariais - MVP full-stack (React + Express + Prisma)",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "workspaces": ["apps/api", "apps/web"],
+  "scripts": {
+    "setup": "npm install && npm run db:reset -w @alvaraflow/api",
+    "dev": "concurrently -n api,web -c blue,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm run dev -w @alvaraflow/api",
+    "dev:web": "npm run dev -w @alvaraflow/web",
+    "build": "npm run build -w @alvaraflow/api && npm run build -w @alvaraflow/web",
+    "typecheck": "npm run typecheck -w @alvaraflow/api && npm run typecheck -w @alvaraflow/web",
+    "db:reset": "npm run db:reset -w @alvaraflow/api",
+    "seed": "npm run seed -w @alvaraflow/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,149 @@
+// AlvaraFlow - modelo de dados
+// SQLite nao suporta enums nativos no Prisma; os campos "enumerados" sao
+// String e validados na borda da API pelos schemas Zod de cada modulo.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String   @id @default(uuid())
+  email              String   @unique
+  passwordHash       String
+  fullName           String
+  role               String   @default("USER") // USER | ADMIN
+  mustChangePassword Boolean  @default(false)
+  ativo              Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  documentos Documento[]
+
+  @@map("users")
+}
+
+model Cliente {
+  id                         String   @id @default(uuid())
+  cnpj                       String   @unique // apenas digitos
+  razaoSocial                String
+  nomeFantasia               String   @default("")
+  uf                         String
+  municipio                  String
+  atividadePrincipalCodigo   String   @default("")
+  atividadePrincipalDescricao String  @default("")
+  /// Cliente desativado (encerrado / fora da carteira).
+  ativo                      Boolean  @default(true)
+  /// Pausa operacional: continua ativo, mas sem movimento.
+  semAtividade               Boolean  @default(false)
+  /// Marcador de triagem: cliente recem-cadastrado ainda nao conferido.
+  isNovo                     Boolean  @default(false)
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  alvaras               Alvara[]
+  taxas                 TaxaFuncionamento[]
+  atividadesSecundarias AtividadeSecundaria[]
+  documentos            Documento[]
+
+  @@index([razaoSocial])
+  @@map("clientes")
+}
+
+model AtividadeSecundaria {
+  id        String  @id @default(uuid())
+  clienteId String
+  codigo    String
+  descricao String
+
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, codigo])
+  @@map("atividades_secundarias")
+}
+
+model Alvara {
+  id        String @id @default(uuid())
+  clienteId String
+
+  /// Um dos ALVARA_TIPOS (ex.: "Alvara de Funcionamento").
+  tipo String
+
+  requestDate    DateTime
+  issueDate      DateTime?
+  expirationDate DateTime?
+
+  /// lancado | aguardando_cliente | aguardando_orgao | renovacao
+  processingStatus String @default("lancado")
+  /// protocolado | aguardando_cliente | aguardando_orgao | aguardando_pagamento | finalizado
+  andamento String?
+
+  /// Alvara dispensado de taxa (Funcionamento, Sanitario, Bombeiros).
+  isento Boolean @default(false)
+  /// Atividade sem estabelecimento fixo.
+  semPontoFixo        Boolean @default(false)
+  protocoloPrefeitura String?
+  notes               String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cliente    Cliente     @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  documentos Documento[]
+
+  @@index([clienteId])
+  @@index([expirationDate])
+  @@map("alvaras")
+}
+
+model TaxaFuncionamento {
+  id        String  @id @default(uuid())
+  clienteId String
+  ano       Int
+  /// Guia emitida pela prefeitura.
+  gerada Boolean @default(false)
+  /// Guia enviada ao cliente.
+  enviada Boolean @default(false)
+  paga    Boolean @default(false)
+
+  protocolo       String    @default("")
+  dataEnvio       DateTime?
+  dataPagamento   DateTime?
+  valor           Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, ano])
+  @@index([ano])
+  @@map("taxas_funcionamento")
+}
+
+model Documento {
+  id           String @id @default(uuid())
+  nomeOriginal String
+  mimeType     String
+  tamanho      Int
+  /// Caminho relativo dentro de UPLOAD_DIR.
+  storageKey String
+
+  clienteId    String?
+  alvaraId     String?
+  uploadedById String?
+
+  createdAt DateTime @default(now())
+
+  cliente    Cliente? @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  alvara     Alvara?  @relation(fields: [alvaraId], references: [id], onDelete: Cascade)
+  uploadedBy User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([clienteId])
+  @@index([alvaraId])
+  @@map("documentos")
+}

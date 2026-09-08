@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Identidade visual do AlvaraFlow: teal como cor de acao, cinza-ardosia como
+ * base neutra. Os tokens seguem o padrao shadcn/ui (HSL sem a funcao hsl()).
+ */
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 215 28% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+
+    --primary: 173 80% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 20% 94%;
+    --secondary-foreground: 215 28% 17%;
+
+    --muted: 215 20% 95%;
+    --muted-foreground: 215 14% 42%;
+
+    --accent: 173 45% 94%;
+    --accent-foreground: 173 80% 22%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 20% 89%;
+    --input: 215 20% 89%;
+    --ring: 173 80% 30%;
+
+    --status-valid: 152 60% 36%;
+    --status-expiring: 38 92% 45%;
+    --status-expired: 0 72% 51%;
+    --status-pending: 215 16% 52%;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 215 30% 9%;
+    --foreground: 210 20% 96%;
+
+    --card: 215 28% 12%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 215 28% 12%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 172 66% 45%;
+    --primary-foreground: 215 30% 9%;
+
+    --secondary: 215 22% 18%;
+    --secondary-foreground: 210 20% 96%;
+
+    --muted: 215 22% 17%;
+    --muted-foreground: 215 15% 65%;
+
+    --accent: 215 24% 20%;
+    --accent-foreground: 172 66% 60%;
+
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 20% 22%;
+    --input: 215 20% 22%;
+    --ring: 172 66% 45%;
+
+    --status-valid: 152 52% 46%;
+    --status-expiring: 38 88% 58%;
+    --status-expired: 0 70% 62%;
+    --status-pending: 215 14% 62%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Tabelas longas com cabecalho fixo dentro do container rolavel. */
+  .table-sticky-head thead th {
+    @apply sticky top-0 z-10 bg-card;
+  }
+}

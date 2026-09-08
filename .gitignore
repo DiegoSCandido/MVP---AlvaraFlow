@@ -1,0 +1,31 @@
+node_modules
+dist
+dist-ssr
+build
+*.local
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# banco local (SQLite) e uploads gerados em runtime
+*.db
+*.db-journal
+*.sqlite
+apps/api/prisma/*.db*
+apps/api/uploads/*
+!apps/api/uploads/.gitkeep
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# editores / SO
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
