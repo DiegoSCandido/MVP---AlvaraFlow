@@ -114,6 +114,8 @@ Práticas aplicadas, na medida que um MVP comporta:
 - Validação Zod em toda entrada, incluindo dígito verificador do CNPJ.
 - Upload com allowlist de MIME, limite de tamanho e nome de arquivo opaco gerado pelo servidor; o download resolve o caminho e confere o prefixo antes de ler.
 
+Limitação conhecida: excluir um cliente ou alvará remove os registros de anexo em cascata, mas os arquivos correspondentes permanecem no disco — a limpeza depende de uma rotina que este MVP não tem.
+
 O que um deploy real exigiria a mais: refresh token com rotação, `httpOnly cookie` no lugar de `localStorage`, auditoria de alterações, storage de objetos no lugar do disco local e Postgres no lugar do SQLite.
 
 ## Licença
