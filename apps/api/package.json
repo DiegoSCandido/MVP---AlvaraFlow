@@ -4,13 +4,20 @@
   "version": "0.1.0",
   "type": "module",
   "main": "dist/server.js",
-  "engines": { "node": ">=20" },
-  "prisma": { "seed": "tsx prisma/seed.ts" },
+  "engines": {
+    "node": ">=20"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc -p tsconfig.json",
+    "build": "prisma generate && tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "db:push": "prisma db push",
     "db:reset": "prisma db push --force-reset && npm run seed",
     "db:studio": "prisma studio",
@@ -38,6 +45,7 @@
     "@types/node": "^22.10.5",
     "prisma": "^6.2.1",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.7"
   }
 }

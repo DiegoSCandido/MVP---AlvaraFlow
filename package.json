@@ -13,6 +13,7 @@
     "dev:web": "npm run dev -w @alvaraflow/web",
     "build": "npm run build -w @alvaraflow/api && npm run build -w @alvaraflow/web",
     "typecheck": "npm run typecheck -w @alvaraflow/api && npm run typecheck -w @alvaraflow/web",
+    "test": "npm run test -w @alvaraflow/api",
     "db:reset": "npm run db:reset -w @alvaraflow/api",
     "seed": "npm run seed -w @alvaraflow/api"
   },
